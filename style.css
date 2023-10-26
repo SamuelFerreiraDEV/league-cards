@@ -1,27 +1,47 @@
-#container {
-  border: 3px solid black;
-  background-color: bisque;
-  border-radius: 5px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.size-input {
-  width: 10%;
-  border-radius: 4px;
+html, body {
+  height: 100%;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: bisque;
+  justify-content: center;
+  align-items: center;
+}
+
+#header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 15%;
+  background-color: brown;
 }
 
 #grid-container {
-  width: 50%;
-  height: 300px;
   display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: auto;
-  gap: 5px;
+  /* grid-template-columns: repeat(3, 1fr); */
+  width: 100%;
+  height: 80%;
+  gap: 1%;
+  background-color: chocolate;
+  align-items: center;
 }
 
 .cards {
-  /* width: 20px;
-  height: 20px; */
+  aspect-ratio: 1/1;
+  /* width: 100%; */
+  /* height: 100%; */
   background-color: burlywood;
   border: 1px solid brown;
-  border-radius: 5%;
+  border-radius: 5px;
 }

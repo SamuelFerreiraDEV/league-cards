@@ -7,10 +7,13 @@ startButton.onclick = () => {
 
 function addCards() {
 
-  const columnsInput = document.getElementById("columns-input");
-  console.log(columnsInput.value)
+  const cardsInput = document.getElementById("cards-input");
+  const gridContainer = document.getElementById("grid-container");
+
+  gridContainer.style.gridTemplateColumns = 
+  `repeat(${Math.ceil(cardsInput.value / 4)}, 1fr)`;
   
-  for (let i = 0; i <= columnsInput.value; i++) {
+  for (let i = 0; i < cardsInput.value; i++) {
 
     const newCard = document.createElement("div");
     newCard.classList.add("cards");
