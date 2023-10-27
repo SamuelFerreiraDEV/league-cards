@@ -11,10 +11,12 @@ html, body {
 #container {
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
   background-color: bisque;
   justify-content: center;
   align-items: center;
+
 }
 
 #header {
@@ -27,21 +29,45 @@ html, body {
   background-color: brown;
 }
 
+#grid-container::-webkit-scrollbar {
+  display: none;
+}
+
 #grid-container {
   display: grid;
-  /* grid-template-columns: repeat(3, 1fr); */
+  /* grid-template-columns: repeat(10, 100px); */
+  grid-auto-columns: 100px;
   width: 100%;
-  height: 80%;
-  gap: 1%;
+  height: 100%;
   background-color: chocolate;
-  align-items: center;
+  /* justify-items: center;  parece n precisar */ 
+  /* align-items: center;  parece n precisar */
+  justify-content: center;
+  align-content: center;
+  overflow: scroll;
+}
+
+@media screen and (max-width: 768px) {
+  #grid-container {
+    grid-template-columns: repeat(6, 100px);
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  #grid-container {
+    grid-template-columns: repeat(7, 100px); 
+  }
 }
 
 .cards {
-  aspect-ratio: 1/1;
-  /* width: 100%; */
-  /* height: 100%; */
+  /* aspect-ratio: 1/1.33; */
+  width: 100px;
+  height: 125px;
   background-color: burlywood;
   border: 1px solid brown;
   border-radius: 5px;
+}
+
+.invisible {
+  display: none;
 }
