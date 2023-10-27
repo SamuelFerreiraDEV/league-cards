@@ -13,12 +13,13 @@ function addCards() {
 
     const newCard = document.createElement("div");
 
-    flexContainer.appendChild(newCard);
     newCard.classList.add("cards");
-    newCard.innerHTML = `${i}`
-
+    newCard.innerHTML = `${i+1}`;
+    flexContainer.appendChild(newCard)
+    
   }
 }
+
 
 
 
