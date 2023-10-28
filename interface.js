@@ -11,18 +11,17 @@ startButton.onclick = () => {
 }
 
 function setUpGrid () {
-  gridContainer.style.gridTemplateColumns = 
+
+  gridContainer.style.gridTemplateColumns =
   `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
   
-  gridContainer.style.gridTemplateRows = 
+  gridContainer.style.gridTemplateRows =
   `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsHeight})`;
 
   if (cardsInput.value > 16) {
     gridContainer.style.alignContent = "stretch";
   }
-
 }
-
 
 function addCards () {
 
@@ -30,8 +29,19 @@ function addCards () {
 
     const newCard = document.createElement("div");
     newCard.classList.add("cards");
-    newCard.innerHTML = `${i+1}`
+
+    const cardFront = document.createElement("div");
+    cardFront.classList.add("card-front");
+    cardFront.innerText = `${i+1}`
+
+
+    const cardBack = document.createElement("div");
+    cardBack.classList.add("card-back");
+    cardBack.innerText = `${i+1}`
+
     gridContainer.appendChild(newCard);
+    newCard.appendChild(cardFront);
+    newCard.appendChild(cardBack);
 
   }
 }

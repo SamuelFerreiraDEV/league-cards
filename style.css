@@ -16,7 +16,6 @@ html, body {
   background-color: bisque;
   justify-content: center;
   align-items: center;
-
 }
 
 #header {
@@ -36,12 +35,9 @@ html, body {
 #grid-container {
   display: grid;
   /* grid-template-columns: repeat(10, 100px); */
-  grid-auto-columns: 100px;
   width: 100%;
-  height: 100%;
-  background-color: chocolate;
-  /* justify-items: center;  parece n precisar */ 
-  /* align-items: center;  parece n precisar */
+  height: 85%;
+  background-color: chocolate; 
   justify-content: center;
   align-content: center;
   overflow: scroll;
@@ -60,12 +56,33 @@ html, body {
 }
 
 .cards {
-  /* aspect-ratio: 1/1.33; */
   width: 100px;
   height: 125px;
-  background-color: burlywood;
   border: 1px solid brown;
   border-radius: 5px;
+  transform-style: preserve-3d;
+  transition: all 1s ease;
+  
+}
+
+.cards:hover {
+  transform: rotateY(180deg);
+}
+
+.card-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* backface-visibility: hidden; */
+  background-color: cadetblue;
+}
+.card-back {
+  /* position: absolute; */
+  width: 100%;
+  height: 100%;
+  background-color: deeppink;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
 }
 
 .invisible {
