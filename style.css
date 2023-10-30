@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+:root {
+  --cards-width: 100px;
+  --cards-height: 125px;
+}
+
 html, body {
   height: 100%;
 }
@@ -41,6 +46,8 @@ html, body {
   justify-content: center;
   align-content: center;
   overflow: scroll;
+  perspective: 1000px;
+  gap: 0.3%;
 }
 
 @media screen and (max-width: 768px) {
@@ -56,16 +63,15 @@ html, body {
 }
 
 .cards {
-  width: 100px;
-  height: 125px;
-  border: 1px solid brown;
-  border-radius: 5px;
+  width: var(--card-width);
+  height: var(--card-height);
   transform-style: preserve-3d;
-  transition: all 1s ease;
-  
+  transition: all 0.5s ease;
+  border-radius: 5px; /* gambiarra */
+  cursor: pointer;
 }
 
-.cards:hover {
+.flip {
   transform: rotateY(180deg);
 }
 
@@ -75,16 +81,16 @@ html, body {
   height: 100%;
   /* backface-visibility: hidden; */
   background-color: cadetblue;
+  border: 2px solid black;
+  border-radius: 5px;
+
 }
 .card-back {
-  /* position: absolute; */
   width: 100%;
   height: 100%;
-  background-color: deeppink;
-  backface-visibility: hidden;
   transform: rotateY(180deg);
-}
-
-.invisible {
-  display: none;
+  backface-visibility: hidden;
+  background-color: deeppink;
+  border: 2px solid black;
+  border-radius: 5px;
 }
