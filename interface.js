@@ -4,11 +4,15 @@ const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
+// const imgKat = document.getElementById("imagem-Kat");
+
+// const url = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/Katarina.json"
 
 startButton.onclick = () => {
   setUpGrid();
   addCards();
   cardsCanFlip();
+  fetchImages()
 }
 
 function setUpGrid () {
@@ -17,7 +21,7 @@ function setUpGrid () {
   `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
   
   gridContainer.style.gridTemplateRows =
-  `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsHeight})`;
+  `repeat(${Math.ceil(cardsInput.value / Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10))}, ${cardsHeight})`;
 
   if (cardsInput.value > 16) {
     gridContainer.style.alignContent = "stretch";
@@ -64,4 +68,32 @@ function addFlipClassToParent(element) {
   } else {
     element.parentElement.classList.add("flip");
   }
+}
+
+function fetchImages() {
+
+const url = "https://reqres.in/api/users"
+const getcardBack = document.getElementsByClassName("card-back");
+const cardBack = Array.from(getcardBack);
+
+  fetch(url)
+  .then((resultado) => {
+    return resultado.json();
+  })
+  .then((dados) => {
+    console.log(dados)
+    // gridContainer.style.backgroundImage = `url(${dados.data.Katarina.image.full})`
+    gridContainer.style.backgroundImage = `url(${dados.data[2].avatar})`
+
+    cardBack.forEach((element) => {
+      const randomIndex = Math.floor(Math.random() * 6);
+      element.style.backgroundImage = `url(${dados.data[randomIndex].avatar})`
+    })
+
+    console.log(getComputedStyle(gridContainer).getPropertyValue("background-image"))
+    // console.log(dados.data.Katarina.image.full)
+    // imgKat.src = dados.data.Katarina.image.sprite
+    // imgKat.src = dados.data[0].avatar
+    console.log(dados.data[0].avatar)
+  })
 }
