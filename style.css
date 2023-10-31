@@ -39,7 +39,7 @@ html, body {
 
 #grid-container {
   display: grid;
-  /* grid-template-columns: repeat(10, 100px); */
+  /* grid-template-columns: repeat(); */
   width: 100%;
   height: 85%;
   background-color: chocolate; 
@@ -47,7 +47,8 @@ html, body {
   align-content: center;
   overflow: scroll;
   perspective: 1000px;
-  gap: 0.3%;
+  gap: 0.2%;
+  /* background-image: url(); */
 }
 
 @media screen and (max-width: 768px) {
@@ -66,9 +67,10 @@ html, body {
   width: var(--card-width);
   height: var(--card-height);
   transform-style: preserve-3d;
-  transition: all 0.5s ease;
+  transition: all 0.7s ease;
   border-radius: 5px; /* gambiarra */
   cursor: pointer;
+  box-shadow: 0 1px 5px 2px rgba(0, 0, 0, 1)
 }
 
 .flip {
@@ -81,7 +83,7 @@ html, body {
   height: 100%;
   /* backface-visibility: hidden; */
   background-color: cadetblue;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   border-radius: 5px;
 
 }
@@ -91,6 +93,6 @@ html, body {
   transform: rotateY(180deg);
   backface-visibility: hidden;
   background-color: deeppink;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   border-radius: 5px;
 }
