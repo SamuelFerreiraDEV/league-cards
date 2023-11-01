@@ -4,15 +4,17 @@ const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
-// const imgKat = document.getElementById("imagem-Kat");
 
-// const url = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/Katarina.json"
+const Kat = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_10.jpg";
+gridContainer.style.backgroundImage = `url(${Kat})`
+
+
 
 startButton.onclick = () => {
   setUpGrid();
   addCards();
   cardsCanFlip();
-  fetchImages()
+  fetchImages();
 }
 
 function setUpGrid () {
@@ -72,28 +74,28 @@ function addFlipClassToParent(element) {
 
 function fetchImages() {
 
-const url = "https://reqres.in/api/users"
 const getcardBack = document.getElementsByClassName("card-back");
 const cardBack = Array.from(getcardBack);
+const KatAPI = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/Katarina.json";
 
-  fetch(url)
-  .then((resultado) => {
-    return resultado.json();
+  fetch(KatAPI)
+  .then((response) => {
+    return response.json();
   })
-  .then((dados) => {
-    console.log(dados)
-    // gridContainer.style.backgroundImage = `url(${dados.data.Katarina.image.full})`
-    gridContainer.style.backgroundImage = `url(${dados.data[2].avatar})`
-
-    cardBack.forEach((element) => {
-      const randomIndex = Math.floor(Math.random() * 6);
-      element.style.backgroundImage = `url(${dados.data[randomIndex].avatar})`
+  .then((data) => {
+    const skins = data.data.Katarina.skins;
+    
+    const skinsIndex = skins.map((e) => {
+      return e.num;
     })
 
-    console.log(getComputedStyle(gridContainer).getPropertyValue("background-image"))
-    // console.log(dados.data.Katarina.image.full)
-    // imgKat.src = dados.data.Katarina.image.sprite
-    // imgKat.src = dados.data[0].avatar
-    console.log(dados.data[0].avatar)
+    cardBack.forEach((element) => {
+
+      const randomIndex = Math.floor(Math.random() * skinsIndex.length);
+      const randomSkin = skinsIndex[randomIndex];
+
+      const KatArts = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_${randomSkin}.jpg`
+      element.style.backgroundImage = `url(${KatArts})`
+    })
   })
 }
