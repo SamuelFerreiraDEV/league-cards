@@ -5,9 +5,8 @@ const getCards = document.getElementsByClassName("cards");
 const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
 
-const Kat = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_10.jpg";
-gridContainer.style.backgroundImage = `url(${Kat})`
-
+const kat = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_10.jpg";
+gridContainer.style.backgroundImage = `url(${kat})`
 
 
 startButton.onclick = () => {
@@ -74,28 +73,62 @@ function addFlipClassToParent(element) {
 
 function fetchImages() {
 
-const getcardBack = document.getElementsByClassName("card-back");
-const cardBack = Array.from(getcardBack);
-const KatAPI = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/Katarina.json";
+  const getcardBack = document.getElementsByClassName("card-back");
+  const cardBack = Array.from(getcardBack);
 
-  fetch(KatAPI)
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    const skins = data.data.Katarina.skins;
+  const allChampionsAPI = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion.json";
+
+    fetch(allChampionsAPI)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+
+      const championsArray = Object.keys(data.data);
+      const randomIndex = Math.floor(Math.random() * championsArray.length);
+
+      const championAPI = `http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${championsArray[randomIndex]}.json`;
+      console.log(championAPI)
+
+      return championAPI;
+    })
+    .then((response) => {
+      fetch(response)
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        // const skinsId = data.data.Lux.skins;
+
+        const championName = Object.keys(response.data)[0]
+        console.log(championName)
+        const championId = response.data[championName];
+        console.log(championId)
+        const skinsId = championId.skins;
+        console.log(skinsId);
+        
+        const skinsIndex = skinsId.map((e) => {
+          return e.num;
+        })
+
+        console.log(skinsIndex)
+  
+      cardBack.forEach((element) => {
+  
+        const randomIndex = Math.floor(Math.random() * skinsIndex.length);
+        const randomSkin = skinsIndex[randomIndex];
+        
+        const championArts = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${randomSkin}.jpg`
+        element.style.backgroundImage = `url(${championArts})`
+  
+        // const ragCards = `https://static.divine-pride.net/images/items/cards/${randomInteger(4001, 4699)}.png`
+        // const ragSprites = `https://static.divine-pride.net/images/mobs/png/${randomInteger(1001, 3998)}.png`
+      })
+    })
     
-    const skinsIndex = skins.map((e) => {
-      return e.num;
-    })
-
-    cardBack.forEach((element) => {
-
-      const randomIndex = Math.floor(Math.random() * skinsIndex.length);
-      const randomSkin = skinsIndex[randomIndex];
-
-      const KatArts = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_${randomSkin}.jpg`
-      element.style.backgroundImage = `url(${KatArts})`
-    })
-  })
+    function randomInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+  }
+  )
 }
