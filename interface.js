@@ -4,7 +4,6 @@ const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
-const allChampions = [];
 
 const kat = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_10.jpg";
 gridContainer.style.backgroundImage = `url(${kat})`
@@ -28,7 +27,7 @@ function setUpGrid () {
   }
 }
 
-function addCards () {
+async function addCards () {
 
   for (let i = 0; i < cardsInput.value; i++) {
 
@@ -41,7 +40,9 @@ function addCards () {
 
     const cardBack = document.createElement("div");
     cardBack.classList.add("card-back");
-    // fetchImage(cardBack);
+    // cardBack.style.backgroundImage = await setCardImages();
+    // console.log(await setCardImages())
+    // cardBack.style.backgroundImage = `url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Zac_0.jpg)`
 
     cardBack.innerText = `${i+1}`;
 
@@ -55,9 +56,11 @@ function addCards () {
 function cardsCanFlip() {
 
   const cards = Array.from(getCards);
+  console.log(document.getElementsByClassName("cards"))
 
   cards.forEach((element) => {
     element.onclick = (event) => {
+      console.log("aaaa")
       addFlipClassToParent(event.target);
     }
   })
@@ -73,61 +76,70 @@ function addFlipClassToParent(element) {
   }
 }
 
+const allChampions = [];
+
 async function fetchChampionName() {
 
   const allChampionsAPI = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion.json";
-
   const fetched = await fetch(allChampionsAPI)
-  
   const response = await fetched.json()
- 
   const data = Object.keys(response.data)
   
   data.forEach((e) => {
     allChampions.push({name: e})
   })
-  
 }
 
-async function fetchChampionsData() {  
+async function fetchChampionSkins(e) { 
+  try {
+    console.log("entrou try")
+    const singleChampionAPI = `http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${e.name}.json`;
+    const fetched = await fetch(singleChampionAPI)
+    console.log("passou")
+    const response = await fetched.json()
+    const data = Object.keys(response.data)
+    const skinsArray = response.data[data].skins
+
+    const skinsId = skinsArray.map((e) => {
+      return e.num
+    })
+    e.skinsId = skinsId;
+  } catch (error) {
+    e.skinsId = [0, 0, 0, 0, 0]
+    console.log("aaaaaaa", error)
+}
+
+}
+
+async function fetchChampionsData() {   // colocar essa func acima das outras que são chamadas?
 
   await fetchChampionName()
 
-  allChampions.forEach((e) => {
-    
-    async function fetchChampionSkins() { // tentar tirar essa função daqui e deixar fora junto com a fetchChampionName
-      
-      const singleChampionAPI = `http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${e.name}.json`;
-
-      const fetched = await fetch(singleChampionAPI)
-      
-      const response = await fetched.json()
-      
-      const data = Object.keys(response.data)
-
-      const skinsArray = response.data[data].skins
-
-      const skinsId = skinsArray.map((e) => {
-        return e.num
-      })
-
-      e.skins = skinsId;
-
-    }
-
-    fetchChampionSkins()
-
+  const setSkins = allChampions.map((e) => {
+    return fetchChampionSkins(e)
   })
+  await Promise.all(setSkins)
 
 }
 
-async function log() {
-   await fetchChampionsData()
-  console.log(allChampions)
+async function setCardImages() {
+    
+  await fetchChampionsData()
+
+  const randomChampion = Math.floor(Math.random() * (allChampions.length - 1))
+  const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
+
+  const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${allChampions[randomChampion].name}_0.jpg`
+  // const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${allChampions[randomChampion].name}_${randomSkin}.jpg`
+
+  const cardUrl = `url(${link})`;
+  console.log(cardUrl)
+
+  return cardUrl;
+
 }
 
-log()
-
+// setCardImages()
 
 
 // .then((data) => {
