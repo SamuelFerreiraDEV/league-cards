@@ -4,17 +4,19 @@ const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
+const allChampions = [];
 
 const kat = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_10.jpg";
 gridContainer.style.backgroundImage = `url(${kat})`
 
 startButton.onclick = () => {
-  setUpGrid();
+  setUpGridSize();
   addCards();
   cardsCanFlip();
+  setImageOnCards();
 }
 
-function setUpGrid () {
+function setUpGridSize() {
 
   gridContainer.style.gridTemplateColumns =
   `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
@@ -27,9 +29,9 @@ function setUpGrid () {
   }
 }
 
-async function addCards () {
+async function addCards() {
 
-  for (let i = 0; i < cardsInput.value; i++) {
+  for (let i = 0; i < Math.floor(cardsInput.value / 2) * 2; i++) {
 
     const newCard = document.createElement("div");
     newCard.classList.add("cards");
@@ -40,8 +42,6 @@ async function addCards () {
 
     const cardBack = document.createElement("div");
     cardBack.classList.add("card-back");
-    setCardImages(cardBack);
-
     cardBack.innerText = `${i+1}`;
 
     gridContainer.appendChild(newCard);
@@ -49,6 +49,33 @@ async function addCards () {
     newCard.appendChild(cardBack);
 
   }
+}
+// if(cards[0].lastChild.style.backgroundImage) { // comparar cartas
+//   console.log("a")
+// } else {
+//   console.log("b")
+// }
+
+async function setImageOnCards() {
+
+  const cards = Array.from(getCards);
+
+  function randomIndex() {
+    return Math.floor(Math.random() * (cards.length))
+  }
+    
+  for(let i = 0; cards.length !== 0; i++) {
+
+    const card1 = cards.splice(randomIndex(), 1);
+    const card2 = cards.splice(randomIndex(), 1);
+
+    const imagem = await createImageLink();
+
+    card1[0].lastChild.style.backgroundImage = imagem;
+    card2[0].lastChild.style.backgroundImage = imagem;
+
+  }
+
 }
 
 function cardsCanFlip() {
@@ -72,8 +99,6 @@ function addFlipClassToParent(element) {
   }
 }
 
-const allChampions = [];
-
 async function fetchChampionName() {
 
   const allChampionsAPI = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion.json";
@@ -91,15 +116,15 @@ async function fetchChampionSkins(e) {
     const singleChampionAPI = `http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${e.name}.json`;
     const fetched = await fetch(singleChampionAPI)
     const response = await fetched.json()
-    console.log("passou fetchskin")
     const championName = Object.keys(response.data)
     const skinsArray = response.data[championName].skins
-
 
     const skinsId = skinsArray.map((e) => {
       return e.num
     })
+
     e.skinsId = skinsId;
+  
   } catch (error) {
     e.skinsId = [0, 0, 0, 0, 0]
     console.log("entrou catch", error)
@@ -119,17 +144,16 @@ async function fetchChampionsData() {   // colocar essa func acima das outras qu
 
 fetchChampionsData()
 
-async function setCardImages(element) {
+async function createImageLink() {
 
   const randomChampion = Math.floor(Math.random() * (allChampions.length - 1))
   const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
-  console.log(randomSkin)
 
   const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${allChampions[randomChampion].name}_${allChampions[randomChampion].skinsId[randomSkin]}.jpg`
 
   const cardUrl = `url(${link})`;
 
-  element.style.backgroundImage = cardUrl;
+  return cardUrl;
 
 }
 
