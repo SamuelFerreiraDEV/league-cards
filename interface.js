@@ -6,9 +6,6 @@ const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
 const allChampions = [];
 
-const kat = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Katarina_10.jpg";
-gridContainer.style.backgroundImage = `url(${kat})`
-
 startButton.onclick = () => {
   setUpGridSize();
   addCards();
@@ -64,15 +61,15 @@ async function setImageOnCards() {
     return Math.floor(Math.random() * (cards.length))
   }
     
-  for(let i = 0; cards.length !== 0; i++) {
+  while(cards.length !== 0) {
 
     const card1 = cards.splice(randomIndex(), 1);
     const card2 = cards.splice(randomIndex(), 1);
 
-    const imagem = await createImageLink();
+    const image = await createImageLink();
 
-    card1[0].lastChild.style.backgroundImage = imagem;
-    card2[0].lastChild.style.backgroundImage = imagem;
+    card1[0].lastChild.style.backgroundImage = image;
+    card2[0].lastChild.style.backgroundImage = image;
 
   }
 
@@ -149,8 +146,15 @@ async function createImageLink() {
   const randomChampion = Math.floor(Math.random() * (allChampions.length - 1))
   const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
 
-  const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${allChampions[randomChampion].name}_${allChampions[randomChampion].skinsId[randomSkin]}.jpg`
+  const championName = allChampions[randomChampion].name;
+  const championSkin = allChampions[randomChampion].skinsId.splice(randomSkin, 1)
 
+  if(allChampions[randomChampion].skinsId.length === 0) {
+    allChampions.splice(randomChampion, 1)
+  }
+
+  const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`
+  
   const cardUrl = `url(${link})`;
 
   return cardUrl;
