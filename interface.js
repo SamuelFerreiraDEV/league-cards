@@ -6,94 +6,15 @@ const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("
 const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
 const allChampions = [];
 
+gridContainer.style.backgroundImage = "url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_10.jpg)"
+
 startButton.onclick = () => {
-  setUpGridSize();
+  inputAlwaysEven()
+  setGridSize();
   addCards();
-  cardsCanFlip();
   setImageOnCards();
-}
-
-function setUpGridSize() {
-
-  gridContainer.style.gridTemplateColumns =
-  `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
-  
-  gridContainer.style.gridTemplateRows =
-  `repeat(${Math.ceil(cardsInput.value / Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10))}, ${cardsHeight})`;
-
-  if (cardsInput.value > 16) {
-    gridContainer.style.alignContent = "stretch";
-  }
-}
-
-async function addCards() {
-
-  for (let i = 0; i < Math.floor(cardsInput.value / 2) * 2; i++) {
-
-    const newCard = document.createElement("div");
-    newCard.classList.add("cards");
-
-    const cardFront = document.createElement("div");
-    cardFront.classList.add("card-front");
-    cardFront.innerText = `${i+1}`
-
-    const cardBack = document.createElement("div");
-    cardBack.classList.add("card-back");
-    cardBack.innerText = `${i+1}`;
-
-    gridContainer.appendChild(newCard);
-    newCard.appendChild(cardFront);
-    newCard.appendChild(cardBack);
-
-  }
-}
-// if(cards[0].lastChild.style.backgroundImage) { // comparar cartas
-//   console.log("a")
-// } else {
-//   console.log("b")
-// }
-
-async function setImageOnCards() {
-
-  const cards = Array.from(getCards);
-
-  function randomIndex() {
-    return Math.floor(Math.random() * (cards.length))
-  }
-    
-  while(cards.length !== 0) {
-
-    const card1 = cards.splice(randomIndex(), 1);
-    const card2 = cards.splice(randomIndex(), 1);
-
-    const image = await createImageLink();
-
-    card1[0].lastChild.style.backgroundImage = image;
-    card2[0].lastChild.style.backgroundImage = image;
-
-  }
-
-}
-
-function cardsCanFlip() {
-
-  const cards = Array.from(getCards);
-
-  cards.forEach((element) => {
-    element.onclick = (event) => {
-      addFlipClassToParent(event.target);
-    }
-  })
-
-}
-
-function addFlipClassToParent(element) {
-
-  if(element.parentElement.classList.contains("flip")) {
-    element.parentElement.classList.remove("flip");
-  } else {
-    element.parentElement.classList.add("flip");
-  }
+  compareTwoCards();
+  // cardsCanFlip();
 }
 
 async function fetchChampionName() {
@@ -128,7 +49,7 @@ async function fetchChampionSkins(e) {
   }
 }
 
-async function fetchChampionsData() {   // colocar essa func acima das outras que são chamadas?
+async function callFetchFunctions() {   // colocar essa func acima das outras que são chamadas?
 
   await fetchChampionName()
 
@@ -139,7 +60,7 @@ async function fetchChampionsData() {   // colocar essa func acima das outras qu
   
 }
 
-fetchChampionsData()
+callFetchFunctions()
 
 async function createImageLink() {
 
@@ -153,7 +74,7 @@ async function createImageLink() {
     allChampions.splice(randomChampion, 1)
   }
 
-  const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`
+  const link = ragCards()
   
   const cardUrl = `url(${link})`;
 
@@ -161,8 +82,157 @@ async function createImageLink() {
 
 }
 
+function inputAlwaysEven() {
+  const value = Math.floor(cardsInput.value / 2) * 2
+  cardsInput.value = value
+}
+
+function setGridSize() {
+  
+  gridContainer.style.gridTemplateColumns =
+  `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
+  
+  gridContainer.style.gridTemplateRows =
+  `repeat(${Math.ceil(cardsInput.value / Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10))}, ${cardsHeight})`;
+
+  if (cardsInput.value > 16) {
+    gridContainer.style.alignContent = "stretch";
+  }
+}
+
+async function addCards() {
+
+  for (let i = 0; i < cardsInput.value; i++) {
+
+    const newCard = document.createElement("div");
+    newCard.classList.add("cards");
+
+    const cardFront = document.createElement("div");
+    cardFront.classList.add("card-front");
+    cardFront.innerText = `${i+1}`
+
+    const cardBack = document.createElement("div");
+    cardBack.classList.add("card-back");
+    cardBack.innerText = `${i+1}`;
+
+    gridContainer.appendChild(newCard);
+    newCard.appendChild(cardFront);
+    newCard.appendChild(cardBack);
+
+  }
+}
+
+async function setImageOnCards() {
+
+  const cards = Array.from(getCards);
+
+  function randomIndex() {
+    return Math.floor(Math.random() * (cards.length))
+  }
+    
+  while(cards.length !== 0) {
+
+    const card1 = cards.splice(randomIndex(), 1);
+    const card2 = cards.splice(randomIndex(), 1);
+
+    const image = await createImageLink();
+
+    card1[0].lastChild.style.backgroundImage = image;
+    card2[0].lastChild.style.backgroundImage = image;
+
+  }
+
+}
+
+function compareTwoCards() {
+  
+  let clickCount = 0;
+  let pairsScore = 0;
+  let cardCheck1;
+  let cardCheck2;
+
+  const cards = Array.from(getCards)
+
+  function checkCards() {
+    cards.forEach((card) => {
+      card.onclick = (event) => {
+
+        addFlipClassToParent(event.target);
+
+        if(clickCount === 0) {
+          cardCheck1 = card;
+          cardCheck1.onclick = null;
+          clickCount++;
+
+        } else if (clickCount === 1){
+          cardCheck2 = card;
+          clickCount = 0;
+
+           if (cardCheck1.lastChild.style.backgroundImage === cardCheck2.lastChild.style.backgroundImage) {
+            cards.splice(cards.indexOf(cardCheck1), 1)
+            cards.splice(cards.indexOf(cardCheck2), 1)
+            cardCheck1.onclick = null;
+            cardCheck2.onclick = null;
+            cardCheck1.style.cursor = "default";
+            cardCheck2.style.cursor = "default";
+            cardCheck1 = null;
+            cardCheck2 = null;
+            console.log(cards)
+
+          } else {
+            console.log("cartas diferentes")
+
+            cards.forEach((card) => {
+              card.onclick = null;
+            })
+
+            setTimeout(() => {
+              addFlipClassToParent(cardCheck1.lastChild);
+              addFlipClassToParent(cardCheck2.lastChild);
+              cardCheck1 = null;
+              cardCheck2 = null;
+              cards.forEach((card) => {
+                card.onclick = checkCards;
+              })
+            }, 500);
+          }
+        }
+      }
+    })
+  }
+  checkCards();
+}
+
+// function cardsCanFlip() {
+
+//   const cards = Array.from(getCards);
+
+//   cards.forEach((element) => {
+//     element.onclick = (event) => {
+//       addFlipClassToParent(event.target);
+//     }
+//   })
+// }
+
+function addFlipClassToParent(element) {
+
+  if(element.parentElement.classList.contains("flip")) {
+    element.parentElement.classList.remove("flip");
+  } else {
+    element.parentElement.classList.add("flip");
+  }
+}
+
+
+function ragCards () {
+
+  return `https://static.divine-pride.net/images/items/cards/${randomInteger(4001, 4699)}.png`
+
+}
+
 // const ragCards = `https://static.divine-pride.net/images/items/cards/${randomInteger(4001, 4699)}.png`
 // const ragSprites = `https://static.divine-pride.net/images/mobs/png/${randomInteger(1001, 3998)}.png`
-// function randomInteger(min, max) {
-//   return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
+
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
