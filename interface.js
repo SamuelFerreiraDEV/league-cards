@@ -2,11 +2,9 @@ const cardsInput = document.getElementById("cards-input");
 const startButton = document.getElementById("start-button");
 const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
-const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
-const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
 const allChampions = [];
 
-gridContainer.style.backgroundImage = "url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_10.jpg)"
+// gridContainer.style.backgroundImage = "url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_10.jpg)"
 
 startButton.onclick = () => {
   inputAlwaysEven()
@@ -14,7 +12,6 @@ startButton.onclick = () => {
   addCards();
   setImageOnCards();
   compareTwoCards();
-  // cardsCanFlip();
 }
 
 async function fetchChampionName() {
@@ -49,7 +46,7 @@ async function fetchChampionSkins(e) {
   }
 }
 
-async function callFetchFunctions() {   // colocar essa func acima das outras que são chamadas?
+async function callFetchFunctions() {
 
   await fetchChampionName()
 
@@ -65,29 +62,32 @@ callFetchFunctions()
 async function createImageLink() {
 
   const randomChampion = Math.floor(Math.random() * (allChampions.length - 1))
-  const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
 
-  const championName = allChampions[randomChampion].name;
-  const championSkin = allChampions[randomChampion].skinsId.splice(randomSkin, 1)
+  // const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
+  // const championName = allChampions[randomChampion].name;
+  // const championSkin = allChampions[randomChampion].skinsId.splice(randomSkin, 1)
 
   if(allChampions[randomChampion].skinsId.length === 0) {
-    allChampions.splice(randomChampion, 1)
+    allChampions.splice(randomChampion, 1);
   }
 
-  const link = ragCards()
-  
-  const cardUrl = `url(${link})`;
+  const link = ragCards();
 
+  const cardUrl = `url(${link})`;
   return cardUrl;
 
 }
 
 function inputAlwaysEven() {
-  const value = Math.floor(cardsInput.value / 2) * 2
-  cardsInput.value = value
+  const value = Math.floor(cardsInput.value / 2) * 2;
+  cardsInput.value = value;
 }
 
 function setGridSize() {
+
+  const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
+  const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
+
   
   gridContainer.style.gridTemplateColumns =
   `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
@@ -150,14 +150,14 @@ function compareTwoCards() {
   let pairsScore = 0;
   let cardCheck1;
   let cardCheck2;
-
-  const cards = Array.from(getCards)
+  
+  const cards = Array.from(getCards);
 
   function checkCards() {
     cards.forEach((card) => {
       card.onclick = (event) => {
 
-        addFlipClassToParent(event.target);
+        addOrRemoveFlipClassToParent(event.target);
 
         if(clickCount === 0) {
           cardCheck1 = card;
@@ -173,8 +173,6 @@ function compareTwoCards() {
             cards.splice(cards.indexOf(cardCheck2), 1)
             cardCheck1.onclick = null;
             cardCheck2.onclick = null;
-            cardCheck1.style.cursor = "default";
-            cardCheck2.style.cursor = "default";
             cardCheck1 = null;
             cardCheck2 = null;
             console.log(cards)
@@ -187,14 +185,14 @@ function compareTwoCards() {
             })
 
             setTimeout(() => {
-              addFlipClassToParent(cardCheck1.lastChild);
-              addFlipClassToParent(cardCheck2.lastChild);
+              addOrRemoveFlipClassToParent(cardCheck1.lastChild);
+              addOrRemoveFlipClassToParent(cardCheck2.lastChild);
               cardCheck1 = null;
               cardCheck2 = null;
               cards.forEach((card) => {
                 card.onclick = checkCards;
               })
-            }, 500);
+            }, 700);
           }
         }
       }
@@ -203,18 +201,7 @@ function compareTwoCards() {
   checkCards();
 }
 
-// function cardsCanFlip() {
-
-//   const cards = Array.from(getCards);
-
-//   cards.forEach((element) => {
-//     element.onclick = (event) => {
-//       addFlipClassToParent(event.target);
-//     }
-//   })
-// }
-
-function addFlipClassToParent(element) {
+function addOrRemoveFlipClassToParent(element) {
 
   if(element.parentElement.classList.contains("flip")) {
     element.parentElement.classList.remove("flip");

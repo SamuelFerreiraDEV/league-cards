@@ -28,9 +28,10 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 100%;
   height: 15%;
-  background-color: brown;
+  background-color: black;
+  color: aliceblue;
 }
 
 #grid-container::-webkit-scrollbar {
@@ -42,13 +43,14 @@ html, body {
   /* grid-template-columns: repeat(); */
   width: 100%;
   height: 85%;
-  background-color: chocolate; 
+  background-color: black; 
   justify-content: center;
   align-content: center;
   overflow: scroll;
   perspective: 1000px;
-  gap: 0.2%;
+  /* gap: 1.5%; */
   /* background-image: url(); */
+  gap: 1.5% 0.9%;
 }
 
 @media screen and (max-width: 768px) {
@@ -70,7 +72,7 @@ html, body {
   transition: all 0.7s ease;
   border-radius: 5px; /* gambiarra */
   cursor: pointer;
-  box-shadow: 0 1px 5px 2px rgba(0, 0, 0, 1);
+  box-shadow: 0 0px 0px 2px white;
 }
 
 .flip {
@@ -82,7 +84,7 @@ html, body {
   width: 100%;
   height: 100%;
   /* backface-visibility: hidden; */
-  background-color: cadetblue;
+  background-color: black;
   /* border: 2px solid black; */
   border-radius: 5px;
   background-size: cover;
@@ -92,7 +94,7 @@ html, body {
   width: 100%;
   height: 100%;
   transform: rotateY(180deg);
-  /* backface-visibility: hidden; */
+  backface-visibility: hidden;
   background-color: deeppink;
   /* border: 2px solid black; */
   border-radius: 5px;
