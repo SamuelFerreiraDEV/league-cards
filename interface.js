@@ -1,3 +1,4 @@
+const menu = document.getElementById("menu");
 const cardsInput = document.getElementById("cards-input");
 const startButton = document.getElementById("start-button");
 const gridContainer = document.getElementById("grid-container");
@@ -6,7 +7,22 @@ const allChampions = [];
 
 // gridContainer.style.backgroundImage = "url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_10.jpg)"
 
+document.getElementById("music").volume = 0.1
+
+function easyGame() {
+  cardsInput.value = 16;
+}
+
+function mediumGame() {
+  cardsInput.value = 32;
+}
+
+function hardGame() {
+  cardsInput.value = 48;
+}
+
 startButton.onclick = () => {
+  menu.style.display = "none"
   inputAlwaysEven()
   setGridSize();
   addCards();
@@ -62,16 +78,17 @@ callFetchFunctions()
 async function createImageLink() {
 
   const randomChampion = Math.floor(Math.random() * (allChampions.length - 1))
+  const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
 
-  // const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
-  // const championName = allChampions[randomChampion].name;
-  // const championSkin = allChampions[randomChampion].skinsId.splice(randomSkin, 1)
+  const championName = allChampions[randomChampion].name;
+  const championSkin = allChampions[randomChampion].skinsId.splice(randomSkin, 1);
 
   if(allChampions[randomChampion].skinsId.length === 0) {
     allChampions.splice(randomChampion, 1);
   }
 
   const link = ragCards();
+  // const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
 
   const cardUrl = `url(${link})`;
   return cardUrl;
@@ -95,7 +112,7 @@ function setGridSize() {
   gridContainer.style.gridTemplateRows =
   `repeat(${Math.ceil(cardsInput.value / Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10))}, ${cardsHeight})`;
 
-  if (cardsInput.value > 16) {
+  if (cardsInput.value > 0) {
     gridContainer.style.alignContent = "stretch";
   }
 }
@@ -147,7 +164,6 @@ async function setImageOnCards() {
 function compareTwoCards() {
   
   let clickCount = 0;
-  let pairsScore = 0;
   let cardCheck1;
   let cardCheck2;
   
@@ -175,7 +191,6 @@ function compareTwoCards() {
             cardCheck2.onclick = null;
             cardCheck1 = null;
             cardCheck2 = null;
-            console.log(cards)
 
           } else {
             console.log("cartas diferentes")
@@ -209,7 +224,6 @@ function addOrRemoveFlipClassToParent(element) {
     element.parentElement.classList.add("flip");
   }
 }
-
 
 function ragCards () {
 

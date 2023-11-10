@@ -10,14 +10,24 @@
 
   <div id="container">
 
-    <div id="header">  
-      <h2>Jogo da Memória</h2>
-      <input type="text" id="cards-input" placeholder="Cartas">
-      <button id="start-button">Começar</button>
-    </div>
-      
-      <div id="grid-container">
+    <audio id="music" controls autoplay>
+      <source src="Assets/Audio/Ragnarok Online OST 12_ Streamside.mp3" type="audio/mpeg"/>
+    </audio>
+
+    <div id="menu">
+      <h1>Jogo da Memória</h1>
+      <div id="buttons-box">
+        <button type="button" class="difficulty-buttons" id="button-easy" onclick="easyGame()">Fácil<br>16 cartas</button>
+        <button type="button" class="difficulty-buttons" id="button-medium" onclick="mediumGame()">Médio<br>32 cartas</button>
+        <button type="button" class="difficulty-buttons" id="button-hard" onclick="hardGame()">Difícil<br>48 cartas</button>
       </div>
+      <div>ou escolha a quantidade de cartas!</div>
+      <input type="text" id="cards-input" placeholder="Cartas"/>
+      <button id="start-button">Começar!</button>
+    </div>
+          
+    <div id="grid-container">
+    </div>
       
   </div>
 
