@@ -1,6 +1,7 @@
 const menu = document.getElementById("menu");
 const cardsInput = document.getElementById("cards-input");
 const startButton = document.getElementById("start-button");
+const restartButton = document.getElementById("restart-button")
 const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const allChampions = [];
@@ -8,6 +9,14 @@ const allChampions = [];
 // gridContainer.style.backgroundImage = "url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_10.jpg)"
 
 document.getElementById("music").volume = 0.1
+
+document.getElementById("mute-button").onclick = () => {
+  if(document.getElementById("music").volume == 0.1) {
+    document.getElementById("music").volume = 0;
+  } else {
+    document.getElementById("music").volume += 0.1;
+  }
+}
 
 function easyGame() {
   cardsInput.value = 16;
@@ -28,6 +37,10 @@ startButton.onclick = () => {
   addCards();
   setImageOnCards();
   compareTwoCards();
+}
+
+restartButton.onclick = () => {
+  location.reload();
 }
 
 async function fetchChampionName() {
@@ -96,6 +109,9 @@ async function createImageLink() {
 }
 
 function inputAlwaysEven() {
+  if (cardsInput.value == 0) {
+    cardsInput.value = 2;
+  }
   const value = Math.floor(cardsInput.value / 2) * 2;
   cardsInput.value = value;
 }
@@ -126,11 +142,9 @@ async function addCards() {
 
     const cardFront = document.createElement("div");
     cardFront.classList.add("card-front");
-    cardFront.innerText = `${i+1}`
 
     const cardBack = document.createElement("div");
     cardBack.classList.add("card-back");
-    cardBack.innerText = `${i+1}`;
 
     gridContainer.appendChild(newCard);
     newCard.appendChild(cardFront);
@@ -191,6 +205,15 @@ function compareTwoCards() {
             cardCheck2.onclick = null;
             cardCheck1 = null;
             cardCheck2 = null;
+
+            if (cards.length === 0) {
+              setTimeout(() => {
+                document.getElementById("end-text").style.display = "block";
+                document.getElementById("restart-button").style.display = "block";
+                document.getElementById("endgame-sfx").volume = 0.3;
+                document.getElementById("endgame-sfx").play();
+              }, 200);
+            }
 
           } else {
             console.log("cartas diferentes")
