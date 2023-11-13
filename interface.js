@@ -105,8 +105,8 @@ async function createImageLink() {
     allChampions.splice(randomChampion, 1);
   }
 
-  // const link = ragCards();
-  const link = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
+  const link = ragCards();
+  // const link = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
 
   const cardUrl = `url(${link})`;
   return cardUrl;
