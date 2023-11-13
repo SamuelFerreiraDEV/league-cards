@@ -45,19 +45,24 @@ restartButton.onclick = () => {
 
 async function fetchChampionName() {
 
-  const allChampionsAPI = "http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion.json";
-  const fetched = await fetch(allChampionsAPI)
-  const response = await fetched.json()
-  const data = Object.keys(response.data)
-  
-  data.forEach((e) => {
-    allChampions.push({name: e})
-  })
+  try {
+    const allChampionsAPI = "https://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion.json";
+    const fetched = await fetch(allChampionsAPI)
+    const response = await fetched.json()
+    const data = Object.keys(response.data)
+    
+    data.forEach((e) => {
+      allChampions.push({name: e})
+    })
+  } catch(error) {
+    console.log("entrou catch", error)
+  }
 }
 
 async function fetchChampionSkins(e) { 
+
   try {
-    const singleChampionAPI = `http://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${e.name}.json`;
+    const singleChampionAPI = `https://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${e.name}.json`;
     const fetched = await fetch(singleChampionAPI)
     const response = await fetched.json()
     const championName = Object.keys(response.data)
@@ -70,8 +75,8 @@ async function fetchChampionSkins(e) {
     e.skinsId = skinsId;
   
   } catch (error) {
-    e.skinsId = [0, 0, 0, 0, 0]
     console.log("entrou catch", error)
+
   }
 }
 
@@ -101,7 +106,7 @@ async function createImageLink() {
   }
 
   const link = ragCards();
-  // const link = `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
+  // const link = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
 
   const cardUrl = `url(${link})`;
   return cardUrl;
