@@ -13,12 +13,19 @@ html, body {
   height: 100%;
 }
 
+.theme-lol {
+  background-image: url(Assets/Images/lol-wallpaper1.png);
+}
+
+.theme-rag {
+  background-image: url(Assets/Images/rag-wallpaper1);
+}
+
 #container {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-image: url(Assets/Images/rag-wallpaper1);
   background-position: center;
   background-size: cover;
   justify-content: center;
@@ -42,8 +49,46 @@ html, body {
   display: none;
 }
 
+.buttons {
+  background-color: aliceblue;
+  border: 2px solid black;
+  font-size: 18px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+#restart-button {
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: auto;
+  display: none;
+}
+
+.theme-button-rag {
+  background-image: url(Assets/Images/rag-icon1.png);
+}
+
+.theme-button-lol {
+  background-image: url(Assets/Images/lol-icon1.png);
+}
+
+#theme-button {
+  padding: 20px;
+  border-radius: 5px;
+  background-size: 50px;
+  background-position: center;
+}
+
+#mute-button {
+  padding: 20px;
+  border-radius: 5px;
+  background-image: url(Assets/Images/mute-button1.png);
+  background-position: center;
+  background-size: 30px;
+  background-repeat: no-repeat;
+}
+
 #menu {
-  /* background-color: blue; */
   display: flex;
   position: absolute;
   flex-direction: column;
@@ -59,36 +104,11 @@ html, body {
   display: flex;
   width: 100%;
   height: 30%;
-  /* background-color: red; */
   justify-content: center;
 }
 
-.buttons {
-  background-color: aliceblue;
-  border: 2px solid black;
-  font-size: 18px;
-  margin: 5px;
-  cursor: pointer;
-}
-
-#mute-button {
-  border-radius: 5px;
-  background-image: url(Assets/Images/mute-button.png);
-  padding: 20px;
-  background-position: center;
-  background-size: 30px;
-  background-repeat: no-repeat;
-}
-
-#restart-button {
-  border-radius: 5px;
-  padding: 10px;
-  margin-left: auto;
-  display: none;
-}
-
 .difficulty-buttons:focus {
-  border: 3px solid rgb(90, 0, 207);
+  border: 3px solid black;
 }
 
 .difficulty-buttons {
@@ -116,18 +136,17 @@ html, body {
 
 #grid-container {
   display: grid;
-  /* grid-template-columns: repeat(); */
   width: 100%;
   height: 100%;
   padding: 2%;
   justify-content: center;
-  align-content: center;
+  align-content: stretch;
   overflow: scroll;
   perspective: 1000px;
   gap: 1% 0.7%;
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   #grid-container {
     grid-template-columns: repeat(6, 100px);
   }
@@ -137,7 +156,7 @@ html, body {
   #grid-container {
     grid-template-columns: repeat(7, 100px); 
   }
-}
+} */
 
 .cards {
   width: var(--card-width);
@@ -146,31 +165,48 @@ html, body {
   transition: all 0.7s ease;
   border-radius: 5px;
   cursor: pointer;
-  /* box-shadow: 0 0px 0px 2px black; */
 }
 
 .flip {
   transform: rotateY(180deg);
 }
 
+
+.card-front-lol {
+  background-image: url(Assets/Images/lol-card1.png);
+}
+
+.card-front-rag {
+  background-image: url(Assets/Images/rag-card1.png);
+  border: 2px solid black;
+
+}
+
 .card-front {
   position: absolute;
   width: 100%;
   height: 100%;
-  /* backface-visibility: hidden; */
-  background-image: url(Assets/Images/rag-card1.png);
   border: 3px solid black;
   border-radius: 7px;
   background-size: contain;
   background-position: center;
 }
+
+.card-back-lol {
+  box-shadow: 0px 2px 0px 1px black;
+}
+
+.card-back-rag {
+  border: 2px solid black;
+}
+
+
 .card-back {
   width: 100%;
   height: 100%;
   transform: rotateY(180deg);
   backface-visibility: hidden;
   background-color: deeppink;
-  /* border: 2px solid black; */
   border-radius: 5px;
   background-size: cover;
   background-position: top;
