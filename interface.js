@@ -166,7 +166,12 @@ async function createImageLink() {
 }
 
 function inputAlwaysEven() {
-  const value = Math.floor(cardsInput.value / 2) * 2;
+  let value = Math.floor(cardsInput.value / 2) * 2;
+
+  if(value == 0) {
+    value = 4;
+  }
+
   cardsInput.value = value;
 }
 
