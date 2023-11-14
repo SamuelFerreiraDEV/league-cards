@@ -1,16 +1,49 @@
-const menu = document.getElementById("menu");
 const cardsInput = document.getElementById("cards-input");
 const startButton = document.getElementById("start-button");
 const restartButton = document.getElementById("restart-button")
 const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const allChampions = [];
+let theme = localStorage.getItem("theme") ?? "rag";
 
-// gridContainer.style.backgroundImage = "url(http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Katarina_10.jpg)"
+function setTheme() {
+  if(theme === "rag") {
+    document.getElementById("container").classList.add("theme-rag");
+    document.getElementById("theme-button").classList.add("theme-button-lol");
+  } else {
+    document.getElementById("container").classList.add("theme-lol");
+    document.getElementById("theme-button").classList.add("theme-button-rag");
+  }
+}
 
-document.getElementById("music").volume = 0.1
+setTheme()
+
+document.getElementById("theme-button").onclick = () => {
+  changeTheme();
+}
+
+function changeTheme() {
+  if(theme === "rag") {
+    theme = "lol";
+    document.getElementById("container").classList.remove("theme-rag");
+    document.getElementById("container").classList.add("theme-lol");
+    document.getElementById("theme-button").classList.remove("theme-button-lol");
+    document.getElementById("theme-button").classList.add("theme-button-rag");
+    localStorage.setItem("theme", theme);
+  } else {
+    theme = "rag";
+    document.getElementById("container").classList.remove("theme-lol")
+    document.getElementById("container").classList.add("theme-rag");
+    document.getElementById("theme-button").classList.remove("theme-button-rag");
+    document.getElementById("theme-button").classList.add("theme-button-lol");
+    localStorage.setItem("theme", theme)
+  }
+}
+
+document.getElementById("music").volume = 0.0;
 
 document.getElementById("mute-button").onclick = () => {
+  document.getElementById("music").play();
   if(document.getElementById("music").volume == 0.1) {
     document.getElementById("music").volume = 0;
   } else {
@@ -30,9 +63,24 @@ function hardGame() {
   cardsInput.value = 48;
 }
 
+cardsInput.onchange = () => {
+  const currentValue = parseInt(cardsInput.value);
+  const minValue = parseInt(cardsInput.min);
+  const maxValue = parseInt(cardsInput.max);
+
+  if (currentValue < minValue) {
+    cardsInput.value = minValue;
+  } else if (currentValue > maxValue) {
+    cardsInput.value = maxValue;
+  }
+};
+
 startButton.onclick = () => {
-  menu.style.display = "none"
-  inputAlwaysEven()
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("theme-button").style.display = "none";
+  document.getElementById("music").volume = 0.1;
+  document.getElementById("music").play();
+  inputAlwaysEven();
   setGridSize();
   addCards();
   setImageOnCards();
@@ -47,15 +95,15 @@ async function fetchChampionName() {
 
   try {
     const allChampionsAPI = "https://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion.json";
-    const fetched = await fetch(allChampionsAPI)
-    const response = await fetched.json()
-    const data = Object.keys(response.data)
+    const fetched = await fetch(allChampionsAPI);
+    const response = await fetched.json();
+    const data = Object.keys(response.data);
     
     data.forEach((e) => {
-      allChampions.push({name: e})
+      allChampions.push({name: e});
     })
   } catch(error) {
-    console.log("entrou catch", error)
+    console.log("entrou catch", error);
   }
 }
 
@@ -63,20 +111,19 @@ async function fetchChampionSkins(e) {
 
   try {
     const singleChampionAPI = `https://ddragon.leagueoflegends.com/cdn/13.21.1/data/en_US/champion/${e.name}.json`;
-    const fetched = await fetch(singleChampionAPI)
-    const response = await fetched.json()
-    const championName = Object.keys(response.data)
-    const skinsArray = response.data[championName].skins
+    const fetched = await fetch(singleChampionAPI);
+    const response = await fetched.json();
+    const championName = Object.keys(response.data);
+    const skinsArray = response.data[championName].skins;
 
     const skinsId = skinsArray.map((e) => {
-      return e.num
+      return e.num;
     })
 
     e.skinsId = skinsId;
   
   } catch (error) {
     console.log("entrou catch", error)
-
   }
 }
 
@@ -85,9 +132,9 @@ async function callFetchFunctions() {
   await fetchChampionName()
 
   const setSkins = allChampions.map((e) => {
-    return fetchChampionSkins(e)
+    return fetchChampionSkins(e);
   })
-  await Promise.all(setSkins)
+  await Promise.all(setSkins);
   
 }
 
@@ -95,8 +142,8 @@ callFetchFunctions()
 
 async function createImageLink() {
 
-  const randomChampion = Math.floor(Math.random() * (allChampions.length - 1))
-  const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1))
+  const randomChampion = Math.floor(Math.random() * (allChampions.length - 1));
+  const randomSkin = Math.floor(Math.random() * (allChampions[randomChampion].skinsId.length - 1));
 
   const championName = allChampions[randomChampion].name;
   const championSkin = allChampions[randomChampion].skinsId.splice(randomSkin, 1);
@@ -105,8 +152,13 @@ async function createImageLink() {
     allChampions.splice(randomChampion, 1);
   }
 
-  const link = ragCards();
-  // const link = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
+  let link;
+  
+  if(theme === "rag") {
+    link = ragCards();
+  } else {
+    link = `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championName}_${championSkin}.jpg`;
+  }
 
   const cardUrl = `url(${link})`;
   return cardUrl;
@@ -114,9 +166,6 @@ async function createImageLink() {
 }
 
 function inputAlwaysEven() {
-  if (cardsInput.value == 0) {
-    cardsInput.value = 2;
-  }
   const value = Math.floor(cardsInput.value / 2) * 2;
   cardsInput.value = value;
 }
@@ -126,16 +175,11 @@ function setGridSize() {
   const cardsWidth = getComputedStyle(document.documentElement).getPropertyValue("--cards-width");
   const cardsHeight = getComputedStyle(document.documentElement).getPropertyValue("--cards-height");
 
-  
   gridContainer.style.gridTemplateColumns =
-  `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10)}, ${cardsWidth})`;
+  `repeat(${Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 8)}, ${cardsWidth})`;
   
   gridContainer.style.gridTemplateRows =
-  `repeat(${Math.ceil(cardsInput.value / Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 10))}, ${cardsHeight})`;
-
-  if (cardsInput.value > 0) {
-    gridContainer.style.alignContent = "stretch";
-  }
+  `repeat(${Math.ceil(cardsInput.value / Math.min(Math.ceil(Math.sqrt(cardsInput.value)), 8))}, ${cardsHeight})`;
 }
 
 async function addCards() {
@@ -147,14 +191,23 @@ async function addCards() {
 
     const cardFront = document.createElement("div");
     cardFront.classList.add("card-front");
+    if (theme === "lol") {
+      cardFront.classList.add("card-front-lol");
+    } else {
+      cardFront.classList.add("card-front-rag");
+    }
 
     const cardBack = document.createElement("div");
     cardBack.classList.add("card-back");
+    if (theme === "lol") {
+      cardBack.classList.add("card-back-lol");
+    } else {
+      cardBack.classList.add("card-back-rag");
+    }
 
     gridContainer.appendChild(newCard);
     newCard.appendChild(cardFront);
     newCard.appendChild(cardBack);
-
   }
 }
 
@@ -163,10 +216,10 @@ async function setImageOnCards() {
   const cards = Array.from(getCards);
 
   function randomIndex() {
-    return Math.floor(Math.random() * (cards.length))
+    return Math.floor(Math.random() * (cards.length));
   }
     
-  while(cards.length !== 0) {
+  while (cards.length !== 0) {
 
     const card1 = cards.splice(randomIndex(), 1);
     const card2 = cards.splice(randomIndex(), 1);
@@ -175,9 +228,7 @@ async function setImageOnCards() {
 
     card1[0].lastChild.style.backgroundImage = image;
     card2[0].lastChild.style.backgroundImage = image;
-
   }
-
 }
 
 function compareTwoCards() {
@@ -194,18 +245,18 @@ function compareTwoCards() {
 
         addOrRemoveFlipClassToParent(event.target);
 
-        if(clickCount === 0) {
+        if (clickCount === 0) {
           cardCheck1 = card;
           cardCheck1.onclick = null;
           clickCount++;
 
-        } else if (clickCount === 1){
+        } else if (clickCount === 1) {
           cardCheck2 = card;
           clickCount = 0;
 
            if (cardCheck1.lastChild.style.backgroundImage === cardCheck2.lastChild.style.backgroundImage) {
-            cards.splice(cards.indexOf(cardCheck1), 1)
-            cards.splice(cards.indexOf(cardCheck2), 1)
+            cards.splice(cards.indexOf(cardCheck1), 1);
+            cards.splice(cards.indexOf(cardCheck2), 1);
             cardCheck1.onclick = null;
             cardCheck2.onclick = null;
             cardCheck1 = null;
@@ -215,14 +266,12 @@ function compareTwoCards() {
               setTimeout(() => {
                 document.getElementById("end-text").style.display = "block";
                 document.getElementById("restart-button").style.display = "block";
-                document.getElementById("endgame-sfx").volume = 0.3;
+                document.getElementById("endgame-sfx").volume = 0.2;
                 document.getElementById("endgame-sfx").play();
               }, 200);
             }
 
           } else {
-            console.log("cartas diferentes")
-
             cards.forEach((card) => {
               card.onclick = null;
             })
@@ -254,13 +303,8 @@ function addOrRemoveFlipClassToParent(element) {
 }
 
 function ragCards () {
-
-  return `https://static.divine-pride.net/images/items/cards/${randomInteger(4001, 4699)}.png`
-
+  return `https://static.divine-pride.net/images/items/cards/${randomInteger(4001, 4699)}.png`;
 }
-
-// const ragCards = `https://static.divine-pride.net/images/items/cards/${randomInteger(4001, 4699)}.png`
-// const ragSprites = `https://static.divine-pride.net/images/mobs/png/${randomInteger(1001, 3998)}.png`
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
