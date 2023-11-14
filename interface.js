@@ -4,7 +4,7 @@ const restartButton = document.getElementById("restart-button")
 const gridContainer = document.getElementById("grid-container");
 const getCards = document.getElementsByClassName("cards");
 const allChampions = [];
-let theme = localStorage.getItem("theme") ?? "rag";
+let theme = sessionStorage.getItem("theme") ?? "rag";
 
 function setTheme() {
   if(theme === "rag") {
@@ -29,14 +29,14 @@ function changeTheme() {
     document.getElementById("container").classList.add("theme-lol");
     document.getElementById("theme-button").classList.remove("theme-button-lol");
     document.getElementById("theme-button").classList.add("theme-button-rag");
-    localStorage.setItem("theme", theme);
+    sessionStorage.setItem("theme", theme);
   } else {
     theme = "rag";
     document.getElementById("container").classList.remove("theme-lol")
     document.getElementById("container").classList.add("theme-rag");
     document.getElementById("theme-button").classList.remove("theme-button-rag");
     document.getElementById("theme-button").classList.add("theme-button-lol");
-    localStorage.setItem("theme", theme)
+    sessionStorage.setItem("theme", theme)
   }
 }
 
