@@ -245,6 +245,7 @@ function compareTwoCards() {
   const cards = Array.from(getCards);
 
   function checkCards() {
+
     cards.forEach((card) => {
       card.onclick = (event) => {
 
@@ -259,7 +260,7 @@ function compareTwoCards() {
           cardCheck2 = card;
           clickCount = 0;
 
-           if (cardCheck1.lastChild.style.backgroundImage === cardCheck2.lastChild.style.backgroundImage) {
+          if (cardCheck1.lastChild.style.backgroundImage === cardCheck2.lastChild.style.backgroundImage) {
             cards.splice(cards.indexOf(cardCheck1), 1);
             cards.splice(cards.indexOf(cardCheck2), 1);
             cardCheck1.onclick = null;
@@ -280,15 +281,13 @@ function compareTwoCards() {
             cards.forEach((card) => {
               card.onclick = null;
             })
-
+            
             setTimeout(() => {
               addOrRemoveFlipClassToParent(cardCheck1.lastChild);
               addOrRemoveFlipClassToParent(cardCheck2.lastChild);
               cardCheck1 = null;
               cardCheck2 = null;
-              cards.forEach((card) => {
-                card.onclick = checkCards;
-              })
+              checkCards();
             }, 700);
           }
         }
